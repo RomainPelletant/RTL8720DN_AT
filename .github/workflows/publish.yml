@@ -1,0 +1,31 @@
+name: Build artifacts
+
+on: [ push ]
+
+env:
+  DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+
+jobs:
+  build:
+      
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: recursive
+          token: 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
+      
+      - name: Pull & update submodules recursively
+        run: |
+          git submodule update --init --recursive
+          git submodule update --recursive --remote
+
+      - name: Build image
+        run: |
+          docker build -t ameba_rtl8720dn .
+
+      - name: Build checkin application
+        run: |
+          docker run --rm \
+            ameba_rtl8720dn \
+            /bin/bash -c ' cd /workdir/ambd_sdk/project/realtek_amebaD_va0_example/GCC-RELEASE/project_hp && make all'
