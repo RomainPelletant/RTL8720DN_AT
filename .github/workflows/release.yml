@@ -1,0 +1,95 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the "master" branch
+  push:
+    tags:
+     - '*'
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+      
+      - name: Pull & update submodules recursively
+        run: |
+          git submodule update --init --recursive
+          git submodule update --recursive --remote
+      - name: Build image
+        run: |
+          docker build -t ameba_rtl8720dn .
+      - name: Build firmware
+        run: |
+          docker run --rm \
+            -v $GITHUB_WORKSPACE:/workdir \
+            ameba_rtl8720dn \
+            /bin/bash -c 'chmod -R 777 /workdir/ambd_sdk/project && \
+            cd /workdir/ambd_sdk/project/realtek_amebaD_va0_example/GCC-RELEASE/project_hp && make all && \
+            cd /workdir/ambd_sdk/project/realtek_amebaD_va0_example/GCC-RELEASE/project_lp && make all '
+            
+      - name: Create release
+        uses: actions/create-release@v1
+        id: create_release
+        with:
+          draft: false
+          prerelease: false
+          release_name: release_${{ github.ref }}
+          tag_name: ${{ github.ref }}
+          body_path: CHANGELOG.md
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          
+      - name: Upload FW binaries KM4 app
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: /home/runner/work/RTL8720DN_AT/RTL8720DN_AT/ambd_sdk/project/realtek_amebaD_va0_example/GCC-RELEASE/project_hp/asdk/image/km4_image2_all.bin
+          asset_name: km4_image2_all.bin
+          asset_content_type: application/octet-stream
+
+      - name: Upload FW binaries KM4 bootloader
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: /home/runner/work/RTL8720DN_AT/RTL8720DN_AT/ambd_sdk/project/realtek_amebaD_va0_example/GCC-RELEASE/project_hp/asdk/image/km4_boot_all.bin
+          asset_name: km4_boot_all.bin
+          asset_content_type: application/octet-stream
+
+      - name: Upload FW binaries KM0 app
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: /home/runner/work/RTL8720DN_AT/RTL8720DN_AT/ambd_sdk/project/realtek_amebaD_va0_example/GCC-RELEASE/project_lp/asdk/image/km0_image2_all.bin
+          asset_name: km0_image2_all.bin
+          asset_content_type: application/octet-stream
+
+      - name: Upload FW binaries KM0 bootloader
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: /home/runner/work/RTL8720DN_AT/RTL8720DN_AT/ambd_sdk/project/realtek_amebaD_va0_example/GCC-RELEASE/project_lp/asdk/image/km0_boot_all.bin
+          asset_name: km0_boot_all.bin
+          asset_content_type: application/octet-stream
+        
