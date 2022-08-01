@@ -13,7 +13,7 @@ jobs:
       - uses: actions/checkout@v2
         with:
           submodules: recursive
-          token: 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
+          token: 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
       
       - name: Pull & update submodules recursively
         run: |
