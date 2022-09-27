@@ -38,8 +38,8 @@ jobs:
             -v $GITHUB_WORKSPACE:/workdir \
             ameba_rtl8720dn \
             /bin/bash -c 'chmod -R 777 /workdir/ambd_sdk/project && \
-            cd /workdir/ambd_sdk/project/realtek_amebaD_va0_example/GCC-RELEASE/project_hp && make all && \
-            cd /workdir/ambd_sdk/project/realtek_amebaD_va0_example/GCC-RELEASE/project_lp && make all '
+            cd /workdir/ambd_sdk/project/realtek_amebaD_va0_example/GCC-RELEASE/project_lp && make all && \
+            cd /workdir/ambd_sdk/project/realtek_amebaD_va0_example/GCC-RELEASE/project_hp && make all '
             
       - name: Create release
         uses: actions/create-release@v1
@@ -91,5 +91,15 @@ jobs:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: /home/runner/work/RTL8720DN_AT/RTL8720DN_AT/ambd_sdk/project/realtek_amebaD_va0_example/GCC-RELEASE/project_lp/asdk/image/km0_boot_all.bin
           asset_name: km0_boot_all.bin
+          asset_content_type: application/octet-stream
+
+      - name: Upload FW binaries KM0&KM4 merged app
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: /home/runner/work/RTL8720DN_AT/RTL8720DN_AT/ambd_sdk/project/realtek_amebaD_va0_example/GCC-RELEASE/project_hp/asdk/image/km0_km4_image2.bin
+          asset_name: km0_km4_image2.bin
           asset_content_type: application/octet-stream
         
