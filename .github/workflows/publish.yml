@@ -30,8 +30,8 @@ jobs:
             -v $GITHUB_WORKSPACE:/workdir \
             ameba_rtl8720dn \
             /bin/bash -c 'chmod -R 777 /workdir/ambd_sdk/project && \
-            cd /workdir/ambd_sdk/project/realtek_amebaD_va0_example/GCC-RELEASE/project_hp && make all && \
-            cd /workdir/ambd_sdk/project/realtek_amebaD_va0_example/GCC-RELEASE/project_lp && make all '
+            cd /workdir/ambd_sdk/project/realtek_amebaD_va0_example/GCC-RELEASE/project_lp && make all && \
+            cd /workdir/ambd_sdk/project/realtek_amebaD_va0_example/GCC-RELEASE/project_hp && make all'
 
       - name: Upload firmware files
         uses: actions/upload-artifact@v3
@@ -42,3 +42,4 @@ jobs:
             /home/runner/work/RTL8720DN_AT/RTL8720DN_AT/ambd_sdk/project/realtek_amebaD_va0_example/GCC-RELEASE/project_hp/asdk/image/km4_boot_all.bin
             /home/runner/work/RTL8720DN_AT/RTL8720DN_AT/ambd_sdk/project/realtek_amebaD_va0_example/GCC-RELEASE/project_lp/asdk/image/km0_boot_all.bin
             /home/runner/work/RTL8720DN_AT/RTL8720DN_AT/ambd_sdk/project/realtek_amebaD_va0_example/GCC-RELEASE/project_lp/asdk/image/km0_image2_all.bin
+            /home/runner/work/RTL8720DN_AT/RTL8720DN_AT/ambd_sdk/project/realtek_amebaD_va0_example/GCC-RELEASE/project_hp/asdk/image/km0_km4_image2.bin
