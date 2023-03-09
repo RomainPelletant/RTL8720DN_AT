@@ -1,0 +1,3 @@
+[submodule "ambd_sdk"]
+	path = ambd_sdk
+	url = https://github.com/Seeed-Studio/seeed-ambd-sdk.git
