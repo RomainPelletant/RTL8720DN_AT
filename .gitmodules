@@ -1,3 +1,0 @@
-[submodule "ambd_sdk"]
-	path = ambd_sdk
-	url = https://github.com/ambiot/ambd_sdk.git
