@@ -21,6 +21,7 @@ RUN mkdir /workdir/ncs && \
         gawk \
         ncurses-dev \
         wget \
+		curl \
         git &&\
     apt-get -y clean && apt-get -y autoremove
 
